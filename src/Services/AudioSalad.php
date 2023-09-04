@@ -2,6 +2,8 @@
 
 namespace StickyBeat\AudioSalad\Services;
 
+use Carbon\Carbon;
+use StickyBeat\AudioSalad\Exceptions\AudioSaladException;
 use StickyBeat\AudioSalad\Services\Client;
 
 class AudioSalad
@@ -31,6 +33,71 @@ class AudioSalad
     string $runDate,
     string $action
   ) {
+    // Check that all arrguments are valid
+    if (
+      !is_array($releaseIds) ||
+      !is_array($targetIds) ||
+      !is_string($runDate) ||
+      !is_string($action)
+    ) {
+      throw new AudioSaladException("Invalid arguments");
+    }
+
+    // Check that action is valid
+    if (
+      $action != "clear" &&
+      $action != "add" &&
+      $action != "full-update" &&
+      $action != "meta-update" &&
+      $action != "delete"
+    ) {
+      throw new AudioSaladException("Invalid action");
+    }
+
+    $parsedRunDate = Carbon::parse($runDate);
+
+    return $this->client
+      ->post("delivery", [
+        "release_ids" => $releaseIds,
+        "target_ids" => $targetIds,
+        "run_date" => $parsedRunDate->format("Y-m-d H:i:s"),
+        "action" => $action,
+      ])
+      ->successful();
+  }
+
+  /**
+   * This will be a list of current deliveries with status, filtered by release_id, target_id, or both.
+   *
+   * @param $releaseIds array[integer]	Valid Release IDs
+   * @param $targetIds array[integer]	Valid Target IDs
+   *
+   * @return array[Delivery]
+   */
+  public function deliveryStatus(
+    int $releaseIds = null,
+    int $targetIds = null
+  ): array {
+    if ($releaseIds != null && $targetIds != null) {
+      $data = [
+        "release_ids" => $releaseIds,
+        "target_ids" => $targetIds,
+      ];
+    } elseif ($releaseIds != null) {
+      $data = [
+        "release_ids" => $releaseIds,
+      ];
+    } elseif ($targetIds != null) {
+      $data = [
+        "target_ids" => $targetIds,
+      ];
+    } else {
+      throw new AudioSaladException("Invalid arguments");
+    }
+
+    $response = $this->client->post("delivery-status", $data);
+
+    return $response->json();
   }
 
   /**
@@ -43,7 +110,7 @@ class AudioSalad
   {
     $response = $this->client->get("delivery-targets");
 
-    return $response;
+    return $response->json();
   }
 
   /**
@@ -73,6 +140,6 @@ class AudioSalad
       $data = [];
     }
 
-    return $this->client->get("label", $data);
+    return $this->client->get("label", $data)->json();
   }
 }
