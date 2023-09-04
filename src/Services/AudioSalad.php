@@ -39,6 +39,6 @@ class AudioSalad
    */
   public function deliveryTargets()
   {
-    $response = $this->client->get("delivery_targets");
+    $response = $this->client->get("delivery-targets");
   }
 }
