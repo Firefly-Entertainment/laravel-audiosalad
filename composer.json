@@ -16,7 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "StickyBeat\\AuioSalad\\": "src/"
+      "StickyBeat\\AudioSalad\\": "src/"
     }
   },
   "authors": [
