@@ -1,0 +1,39 @@
+{
+  "name": "stickybeat/laravel-audiosalad",
+  "description": "AudioSalad API Client for Laravel",
+  "keywords": [
+    "laravel",
+    "audiosalad",
+    "api"
+  ],
+  "license": "MIT",
+  "type": "project",
+  "require": {
+    "php": "^8",
+    "ext-json": "*",
+    "illuminate/console": ">=6",
+    "illuminate/support": ">=6",
+    "illuminate/http": "^10.21"
+  },
+  "autoload": {
+    "psr-4": {
+      "StickyBeat\\AuioSalad\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Örjan Classon",
+      "email": "orjan@stickybeat.se"
+    }
+  ],
+  "extra": {
+    "laravel": {
+      "providers": [
+        "StickyBeat\\AudioSalad\\AudioSaladServiceProvider"
+      ],
+      "aliases": {
+        "AudioSalad": "StickyBeat\\AudioSalad\\Facades\\AudioSalad"
+      }
+    }
+  }
+}
