@@ -70,4 +70,28 @@ class Tracks implements ResourceInterface
 
     return $this->client->get("track-ids", $data)->json();
   }
+
+  /**
+   * Retreive an audio file for given track and type
+   *
+   * @param $trackId integer	Valid Track ID
+   * @param $type string 'clip', 'mp3-320', or 'mp3-96'. Determines what type of file is served
+   *
+   * @return File
+   */
+
+  public function audio(int $trackId, string $type): mixed
+  {
+    // Check that type is valid
+    if ($type != "clip" && $type != "mp3-320" && $type != "mp3-96") {
+      throw new AudioSaladException("Invalid type");
+    }
+
+    return $this->client
+      ->get("track-audio", [
+        "track_id" => $trackId,
+        "type" => $type,
+      ])
+      ->json();
+  }
 }
