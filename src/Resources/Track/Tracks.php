@@ -88,7 +88,7 @@ class Tracks implements ResourceInterface
     }
 
     return $this->client
-      ->get("track-audio", [
+      ->get("audio", [
         "track_id" => $trackId,
         "type" => $type,
       ])
