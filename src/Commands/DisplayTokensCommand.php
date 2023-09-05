@@ -31,9 +31,20 @@ class DisplayTokensCommand extends Command
     $this->components->info(
       "Access token: " . Redis::get("audiosalad-access-token")
     );
+    $this->line(
+      "Expires in: " .
+        round(Redis::ttl("audiosalad-access-token") / 60, 2) .
+        " minutes"
+    );
+    $this->newLine(2);
 
     $this->components->info(
       "Refresh token: " . Redis::get("audiosalad-refresh-token")
+    );
+    $this->line(
+      "Expires in: " .
+        round(Redis::ttl("audiosalad-refresh-token") / (60 * 60), 2) .
+        " hours"
     );
 
     return Command::SUCCESS;

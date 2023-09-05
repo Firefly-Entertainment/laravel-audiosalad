@@ -152,6 +152,11 @@ class Client implements ClientInterface
     return $this->client->baseUrl($baseUrl);
   }
 
+  public function forceRefreshTokens(): void
+  {
+    $this->getAccessToken(true);
+  }
+
   /**
    * Catch given error message from audiosalad.
    *
@@ -204,12 +209,14 @@ class Client implements ClientInterface
    *
    * @return null|string
    */
-  protected function getAccessToken(): ?string
+  protected function getAccessToken(bool $forceRefresh = false): ?string
   {
-    $storedAccessToken = Redis::get("audiosalad-access-token");
-    // Check if token has expired
-    if (!empty($storedAccessToken) && strlen($storedAccessToken) > 2) {
-      return $storedAccessToken;
+    if ($forceRefresh) {
+      $storedAccessToken = Redis::get("audiosalad-access-token");
+      // Check if token has expired
+      if (!empty($storedAccessToken) && strlen($storedAccessToken) > 2) {
+        return $storedAccessToken;
+      }
     }
 
     // Token has expired, Refresh access token
