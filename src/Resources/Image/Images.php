@@ -33,7 +33,7 @@ class Images implements ResourceInterface
    * @return bool
    */
 
-  public function get(int $imageId, string $size, string $file): bool
+  public function get(int $imageId, string $size, mixed $file): bool
   {
     // Make sure size is valid
     if (
@@ -46,7 +46,7 @@ class Images implements ResourceInterface
     ) {
       throw new AudioSaladException("Invalid size");
     }
-    
+
     $this->client->sink("image", [
       "image_id" => $imageId,
       "size" => $size,
