@@ -51,6 +51,42 @@ class Client implements ClientInterface
   }
 
   /**
+   * Sends GET request.
+   *
+   * @param string $endpoint
+   * @param array  $data
+   * @param array  $filter
+   * @param mixed  $file where to store the audio file
+   *
+   * @return mixed
+   */
+  public function getAudio(
+    string $endpoint,
+    array $data = [],
+    array $filter = [],
+    mixed $file
+  ): mixed {
+    // Make a new client with the same settings as the current one
+    // We need to do this since we are going to store the response to a file
+    $client = Http::baseUrl($this->getHost())
+      ->timeout($this->getTimeout())
+      ->withHeaders([
+        "X-Access-Id" => $this->getAccessId(),
+      ])
+      ->withToken($this->getAccessToken())
+      ->asJson()
+      ->acceptJson();
+
+    $response = $client->sink($file)->get($endpoint, $data);
+
+    if ($response->failed()) {
+      $this->catchError($response);
+    }
+
+    return $response;
+  }
+
+  /**
    * Sends PUT request.
    *
    * @param string $endpoint
@@ -170,8 +206,16 @@ class Client implements ClientInterface
    */
   protected function getAccessToken(): ?string
   {
+    $storedAccessToken = Redis::get("audiosalad-access-token");
+    // Check if token has expired
+    if (!empty($storedAccessToken) && strlen($storedAccessToken) > 2) {
+      return $storedAccessToken;
+    }
+
+    // Token has expired, Refresh access token
     $refreshedToken = $this->refreshAccessToken();
-    Redis::set("audiosalad-access-token", $refreshedToken);
+    Redis::set("audiosalad-access-token", $refreshedToken, "EX", 3600); // One hour
+
     return $refreshedToken;
   }
 
@@ -246,8 +290,8 @@ class Client implements ClientInterface
       "audiosalad-refresh-token",
       $response->json("refresh_token"),
       "EX",
-      2160000
-    ); // 25 days
+      86400
+    ); // 24 hours
 
     return $response->json("access_token");
   }
