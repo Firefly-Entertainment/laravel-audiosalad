@@ -89,7 +89,7 @@ class Tracks implements ResourceInterface
     }
 
     return $this->client
-      ->getAudio(
+      ->sink(
         endpoint: 'audio',
         data: [
           'track_id' => $trackId,

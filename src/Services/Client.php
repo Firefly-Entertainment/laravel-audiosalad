@@ -60,7 +60,7 @@ class Client implements ClientInterface
    *
    * @return mixed
    */
-  public function getAudio(
+  public function sink(
     string $endpoint,
     array $data = [],
     array $filter = [],
