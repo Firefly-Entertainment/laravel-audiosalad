@@ -31,7 +31,7 @@ Since this package is not public you have to add the repository under "repositor
 Then you can add the package to required packages
 
 ```
-"stickybeat/lravel-audiosalad": "dev-master"
+"stickybeat/laravel-audiosalad": "dev-master"
 ```
 
 ---
@@ -45,6 +45,7 @@ AUDIOSALAD_S3_BUCKET_NAME=
 AUDIOSALAD_S3_ACCESS_KEY_ID=
 AUDIOSALAD_S3_SECRET_ACCESS_KEY=
 AUDIOSALAD_S3_DEFAULT_REGION=
+AUDIOSALAD_S3_PATH=
 ```
 
 #### Instructions
