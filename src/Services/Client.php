@@ -62,9 +62,9 @@ class Client implements ClientInterface
    */
   public function sink(
     string $endpoint,
+    mixed $file,
     array $data = [],
-    array $filter = [],
-    mixed $file
+    array $filter = []
   ): mixed {
     // Make a new client with the same settings as the current one
     // We need to do this since we are going to store the response to a file
