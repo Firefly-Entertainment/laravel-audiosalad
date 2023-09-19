@@ -6,6 +6,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redis;
 use Psr\Http\Message\RequestInterface;
+use Illuminate\Http\Client\ConnectionException;
 use StickyBeat\AudioSalad\Interfaces\ClientInterface;
 use StickyBeat\AudioSalad\Exceptions\AudioSaladException;
 
@@ -19,6 +20,9 @@ class Client implements ClientInterface
   {
     $this->client = Http::baseUrl($this->getHost())
       ->timeout($this->getTimeout())
+      ->retry(3, 400, function ($exception, $request) {
+        return $exception instanceof ConnectionException;
+      })
       ->withHeaders([
         "X-Access-Id" => $this->getAccessId(),
       ])
