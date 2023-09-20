@@ -215,7 +215,7 @@ class Client implements ClientInterface
    */
   protected function getAccessToken(bool $forceRefresh = false): ?string
   {
-    if ($forceRefresh) {
+    if (!$forceRefresh) {
       $storedAccessToken = Redis::get("audiosalad-access-token");
       // Check if token has expired
       if (!empty($storedAccessToken) && strlen($storedAccessToken) > 2) {
