@@ -2,6 +2,7 @@
 
 namespace StickyBeat\AudioSalad\Services;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redis;
@@ -242,10 +243,12 @@ class Client implements ClientInterface
     $storedRefreshToken = Redis::get("audiosalad-refresh-token");
 
     if (!empty($storedRefreshToken) && strlen($storedRefreshToken) > 2) {
+      Log::debug("Using stored refresh token " . $storedRefreshToken );
       return $storedRefreshToken;
     }
 
     if (!empty(config("audiosalad.refresh_token"))) {
+      Log::debug("Using config refresh token " . config("audiosalad.refresh_token") );
       return config("audiosalad.refresh_token");
     }
 
@@ -282,7 +285,7 @@ class Client implements ClientInterface
       ]);
 
     if ($response->failed()) {
-      throw new AudioSaladException("Failed to refresh token.");
+      throw new AudioSaladException("Failed to refresh token. " . $response->status() . " " . $response->body());
     }
 
     if (empty($response->json("access_token"))) {
