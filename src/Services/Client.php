@@ -226,7 +226,7 @@ class Client implements ClientInterface
 
     // Token has expired, Refresh access token
     $refreshedToken = $this->refreshAccessToken();
-    Redis::set("audiosalad-access-token", $refreshedToken, "EX", 3600); // One hour
+    Redis::set("audiosalad-access-token", $refreshedToken, "EX", 3000); // 50 minutes
 
     return $refreshedToken;
   }
@@ -304,8 +304,8 @@ class Client implements ClientInterface
       "audiosalad-refresh-token",
       $response->json("refresh_token"),
       "EX",
-      86400
-    ); // 24 hours
+      72000
+    ); // 20 hours
 
     return $response->json("access_token");
   }
