@@ -2,18 +2,23 @@
 
 namespace StickyBeat\AudioSalad\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redis;
 use Psr\Http\Message\RequestInterface;
-use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\RequestException;
 use StickyBeat\AudioSalad\Interfaces\ClientInterface;
 use StickyBeat\AudioSalad\Exceptions\AudioSaladException;
 
 class Client implements ClientInterface
 {
   protected $client;
+
+  protected $retryQueue = [];
+
   /**
    * Constructs a new instance.
    */
@@ -21,13 +26,22 @@ class Client implements ClientInterface
   {
     $this->client = Http::baseUrl($this->getHost())
       ->timeout($this->getTimeout())
-      ->retry(3, 400, function ($exception, $request) {
-        return $exception instanceof ConnectionException;
-      })
       ->withHeaders([
         "X-Access-Id" => $this->getAccessId(),
       ])
       ->withToken($this->getAccessToken())
+      ->retry(2, 400, function (Exception $exception, PendingRequest $request) {
+        if (
+          !$exception instanceof RequestException ||
+          $exception->response->status() !== 401
+        ) {
+          return false;
+        }
+
+        $request->withToken($this->getAccessToken(true));
+
+        return true;
+      })
       ->asJson()
       ->acceptJson();
   }
@@ -167,12 +181,19 @@ class Client implements ClientInterface
    *
    * @param  \Illuminate\Http\Client\Response             $response
    *
-   * @throws \StickyBeat\AudioSalad\Exceptions\FortnoxException (description)
+   * @throws \StickyBeat\AudioSalad\Exceptions\AudioSaladException (description)
    *
    * @return void
    */
   protected function catchError(Response $response): void
   {
+    if ($response->unauthorized()) {
+      Log::debug("Unauthorized, refreshing tokens");
+      $this->forceRefreshTokens();
+      $this->retryQueue[] = $response->request();
+      return;
+    }
+
     if ($response->json("ErrorInformation")) {
       $message = !empty($response->json("ErrorInformation.message"))
         ? $response->json("ErrorInformation.message")
@@ -243,12 +264,14 @@ class Client implements ClientInterface
     $storedRefreshToken = Redis::get("audiosalad-refresh-token");
 
     if (!empty($storedRefreshToken) && strlen($storedRefreshToken) > 2) {
-      Log::debug("Using stored refresh token " . $storedRefreshToken );
+      Log::debug("Using stored refresh token " . $storedRefreshToken);
       return $storedRefreshToken;
     }
 
     if (!empty(config("audiosalad.refresh_token"))) {
-      Log::debug("Using config refresh token " . config("audiosalad.refresh_token") );
+      Log::debug(
+        "Using config refresh token " . config("audiosalad.refresh_token")
+      );
       return config("audiosalad.refresh_token");
     }
 
@@ -285,7 +308,12 @@ class Client implements ClientInterface
       ]);
 
     if ($response->failed()) {
-      throw new AudioSaladException("Failed to refresh token. " . $response->status() . " " . $response->body());
+      throw new AudioSaladException(
+        "Failed to refresh token. " .
+          $response->status() .
+          " " .
+          $response->body()
+      );
     }
 
     if (empty($response->json("access_token"))) {
