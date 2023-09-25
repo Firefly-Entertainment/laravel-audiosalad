@@ -246,9 +246,12 @@ class Client implements ClientInterface
       $storedAccessToken = Redis::get("audiosalad-access-token");
       // Check if token has expired
       if (!empty($storedAccessToken) && strlen($storedAccessToken) > 2) {
+        Log::info("Using stored access token");
         return $storedAccessToken;
       }
     }
+
+    Log::info("Refreshing access token");
 
     // Token has expired, Refresh access token
     $refreshedToken = $this->refreshAccessToken();
@@ -269,14 +272,12 @@ class Client implements ClientInterface
     $storedRefreshToken = Redis::get("audiosalad-refresh-token");
 
     if (!empty($storedRefreshToken) && strlen($storedRefreshToken) > 2) {
-      Log::debug("Using stored refresh token " . $storedRefreshToken);
+      Log::debug("Using stored refresh token");
       return $storedRefreshToken;
     }
 
     if (!empty(config("audiosalad.refresh_token"))) {
-      Log::debug(
-        "Using config refresh token " . config("audiosalad.refresh_token")
-      );
+      Log::debug("Using config refresh token");
       return config("audiosalad.refresh_token");
     }
 
