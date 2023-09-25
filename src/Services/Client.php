@@ -176,6 +176,11 @@ class Client implements ClientInterface
     $this->getAccessToken(true);
   }
 
+  public function refreshTokens(): void
+  {
+    $this->getAccessToken(false);
+  }
+
   /**
    * Catch given error message from audiosalad.
    *

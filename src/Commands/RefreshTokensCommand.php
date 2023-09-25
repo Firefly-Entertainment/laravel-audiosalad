@@ -29,7 +29,7 @@ class RefreshTokensCommand extends Command
   public function handle(Client $client)
   {
     try {
-      $client->forceRefreshTokens();
+      $client->refreshTokens();
     } catch (\Exception $e) {
       $this->components->error("Failed to refresh tokens! " . $e->getMessage());
 
