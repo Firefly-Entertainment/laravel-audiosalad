@@ -192,13 +192,6 @@ class Client implements ClientInterface
    */
   protected function catchError(Response $response): void
   {
-    if ($response->unauthorized()) {
-      Log::debug("Unauthorized, refreshing tokens");
-      $this->forceRefreshTokens();
-      $this->retryQueue[] = $response->request();
-      return;
-    }
-
     if ($response->json("ErrorInformation")) {
       $message = !empty($response->json("ErrorInformation.message"))
         ? $response->json("ErrorInformation.message")

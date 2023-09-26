@@ -3,6 +3,7 @@
 namespace StickyBeat\AudioSalad\Resources\Ingestion;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use StickyBeat\AudioSalad\Services\Client;
 use StickyBeat\AudioSalad\Interfaces\ResourceInterface;
 use StickyBeat\AudioSalad\Exceptions\AudioSaladException;
@@ -98,7 +99,7 @@ class Ingestions implements ResourceInterface
     ];
 
     $response = $this->client->get("ingest/status", $data);
-
+    Log::info("Ingestion status: " . $response->body());
     return $response->json();
   }
 }
