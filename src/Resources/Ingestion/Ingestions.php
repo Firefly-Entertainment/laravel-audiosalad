@@ -99,7 +99,15 @@ class Ingestions implements ResourceInterface
     ];
 
     $response = $this->client->get("ingest/status", $data);
-    Log::info("Ingestion status: " . $response->body());
+    
+    if( !$response->body()){
+      Log::info("Empty response from AudioSalad API");
+      Log::info($response->status());
+      Log::info($response->body());
+
+      return [];
+    }
+
     return $response->json();
   }
 }
