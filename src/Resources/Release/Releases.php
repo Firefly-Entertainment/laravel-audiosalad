@@ -69,8 +69,8 @@ class Releases implements ResourceInterface
     $parsedModifiedEnd = Carbon::parse($modifiedEnd);
 
     $data = [
-      "modified_start" => $parsedModifiedStart->format("Y-m-d H:i:s"),
-      "modified_end" => $parsedModifiedEnd->format("Y-m-d H:i:s"),
+      "modified_start" => $parsedModifiedStart->toIso8601ZuluString(),
+      "modified_end" => $parsedModifiedEnd->toIso8601ZuluString(),
     ];
 
     return $this->client->get("release-ids", $data)->json();
