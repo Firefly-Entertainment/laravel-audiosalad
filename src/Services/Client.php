@@ -31,6 +31,7 @@ class Client implements ClientInterface
       ])
       ->withToken($this->getAccessToken())
       ->retry(2, 400, function (Exception $exception, PendingRequest $request) {
+        Log::info("Retrying request" . $exception->getMessage());
         if (
           !$exception instanceof RequestException ||
           $exception->response->status() !== 401
