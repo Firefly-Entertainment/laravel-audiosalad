@@ -39,7 +39,7 @@ class Client implements ClientInterface
           return false;
         }
 
-        $request->withToken($this->getAccessToken(true));
+        $request->withToken($this->getAccessToken(false));
 
         return true;
       })
