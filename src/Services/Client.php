@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Psr\Http\Message\RequestInterface;
 use Illuminate\Http\Client\PendingRequest;
@@ -19,17 +20,13 @@ class Client implements ClientInterface
 
   protected $retryQueue = [];
 
-  protected $lastRequest;
+  protected $throttleLimit = (200/60)*1000000; // 200 requests per minute
 
   /**
    * Constructs a new instance.
    */
   public function __construct()
   {
-    // Set $lastRequest to current microtime
-    $this->lastRequest = microtime(true);
-    Log::debug("Construct - Last request: " . $this->lastRequest);
-
     $this->client = Http::baseUrl($this->getHost())
       ->timeout($this->getTimeout())
       ->withHeaders([
@@ -67,13 +64,32 @@ class Client implements ClientInterface
     array $data = [],
     array $filter = []
   ): mixed {
+
+    // Get last call time from Cache
+    $lastCall = Cache::get("audiosalad-last-call-time");
+    // Get current Microtime
+    $currentTime = microtime(true);
+    // Calculate time since last call
+    $timeSinceLastCall = $currentTime - $lastCall;
+
+    // If time since last call is less than throttle limit, wait until we can make the call
+    if ($timeSinceLastCall < $this->throttleLimit) { {
+        // Calculate time to wait
+        $timeToWait = $this->throttleLimit - $timeSinceLastCall;
+      Log::debug("Throttling request: " . $timeToWait);
+        // Wait
+        usleep($timeToWait);
+      }
+    }
+    
     $response = $this->client->get($endpoint, $data);
+
+    // Store current time in Cache
+    Cache::put("audiosalad-last-call-time", $currentTime, 60);
 
     if ($response->failed()) {
       $this->catchError($response);
     }
-    Log::debug("Request time: " . $this->lastRequest);
-    $this->lastRequest = microtime(true);
 
     return $response;
   }
