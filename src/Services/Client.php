@@ -65,27 +65,10 @@ class Client implements ClientInterface
     array $filter = []
   ): mixed {
 
-    // Get last call time from Cache
-    $lastCall = Cache::get("audiosalad-last-call-time");
-    // Get current Microtime
-    $currentTime = microtime(true);
-    // Calculate time since last call
-    $timeSinceLastCall = $currentTime - $lastCall;
-
-    // If time since last call is less than throttle limit, wait until we can make the call
-    if ($timeSinceLastCall < $this->throttleLimit) { {
-        // Calculate time to wait
-        $timeToWait = $this->throttleLimit - $timeSinceLastCall;
-      Log::debug("Throttling request: " . $timeToWait);
-        // Wait
-        usleep($timeToWait);
-      }
-    }
+    $this->throttleRequest();
     
     $response = $this->client->get($endpoint, $data);
 
-    // Store current time in Cache
-    Cache::put("audiosalad-last-call-time", $currentTime, 60);
 
     if ($response->failed()) {
       $this->catchError($response);
@@ -110,6 +93,9 @@ class Client implements ClientInterface
     array $data = [],
     array $filter = []
   ): mixed {
+
+    $this->throttleRequest();
+
     // Make a new client with the same settings as the current one
     // We need to do this since we are going to store the response to a file
     $client = Http::baseUrl($this->getHost())
@@ -140,6 +126,9 @@ class Client implements ClientInterface
    */
   public function put(string $endpoint, array $data = []): mixed
   {
+
+    $this->throttleRequest();
+
     $response = $this->client->put($endpoint, $data);
 
     if ($response->failed()) {
@@ -163,6 +152,9 @@ class Client implements ClientInterface
     array $data = [],
     array $filter = []
   ): mixed {
+
+    $this->throttleRequest();
+
     $response = $this->client->post($endpoint, $data);
 
     if ($response->failed()) {
@@ -182,6 +174,9 @@ class Client implements ClientInterface
    */
   public function delete(string $endpoint, array $data = []): mixed
   {
+
+    $this->throttleRequest();
+
     $response = $this->client->delete($endpoint, $data);
 
     if ($response->failed()) {
@@ -360,5 +355,26 @@ class Client implements ClientInterface
     ); // 20 hours
 
     return $response->json("access_token");
+  }
+
+  private function throttleRequest() {
+    // Get last call time from Cache
+    $lastCall = Cache::get("audiosalad-last-call-time");
+    // Get current Microtime
+    $currentTime = microtime(true);
+    // Calculate time since last call
+    $timeSinceLastCall = $currentTime - $lastCall;
+
+    // If time since last call is less than throttle limit, wait until we can make the call
+    if ($timeSinceLastCall < $this->throttleLimit) { {
+        // Calculate time to wait
+        $timeToWait = $this->throttleLimit - $timeSinceLastCall;
+        Log::debug("Throttling request: " . $timeToWait);
+        // Wait
+        usleep($timeToWait);
+      }
+    }
+    // Set current time as last call time
+    Cache::put("audiosalad-last-call-time", $currentTime, 1);
   }
 }
