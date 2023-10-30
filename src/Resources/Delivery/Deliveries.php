@@ -58,7 +58,7 @@ class Deliveries implements ResourceInterface
       ->post("delivery", [
         "release_ids" => $releaseIds,
         "target_ids" => $targetIds,
-        "run_date" => $parsedRunDate->format("Y-m-d H:i:s"),
+        "run_date" => $parsedRunDate->toIso8601ZuluString(),
         "action" => $action,
       ])
       ->successful();
