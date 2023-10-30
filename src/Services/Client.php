@@ -19,11 +19,17 @@ class Client implements ClientInterface
 
   protected $retryQueue = [];
 
+  protected $lastRequest;
+
   /**
    * Constructs a new instance.
    */
   public function __construct()
   {
+    // Set $lastRequest to current microtime
+    $this->lastRequest = microtime(true);
+    Log::debug("Construct - Last request: " . $this->lastRequest);
+
     $this->client = Http::baseUrl($this->getHost())
       ->timeout($this->getTimeout())
       ->withHeaders([
@@ -66,6 +72,8 @@ class Client implements ClientInterface
     if ($response->failed()) {
       $this->catchError($response);
     }
+    Log::debug("Request time: " . $this->lastRequest);
+    $this->lastRequest = microtime(true);
 
     return $response;
   }
