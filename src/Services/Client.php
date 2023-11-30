@@ -369,6 +369,6 @@ class Client implements ClientInterface
       usleep($timeToWait);
     }
     // Set current time as last call time
-    Redis::get("audiosalad-last-call-time", $currentTime, 1);
+    Redis::set("audiosalad-last-call-time", $currentTime, 1);
   }
 }
