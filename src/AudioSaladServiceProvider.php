@@ -1,11 +1,11 @@
 <?php
 
-namespace StickyBeat\AudioSalad;
+namespace Firefly\AudioSalad;
 
 use Illuminate\Support\ServiceProvider;
-use StickyBeat\AudioSalad\Commands\PurgeTokensCommand;
-use StickyBeat\AudioSalad\Commands\DisplayTokensCommand;
-use StickyBeat\AudioSalad\Commands\RefreshTokensCommand;
+use Firefly\AudioSalad\Commands\PurgeTokensCommand;
+use Firefly\AudioSalad\Commands\DisplayTokensCommand;
+use Firefly\AudioSalad\Commands\RefreshTokensCommand;
 
 class AudioSaladServiceProvider extends ServiceProvider
 {

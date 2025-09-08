@@ -1,6 +1,6 @@
 <?php
 
-namespace StickyBeat\AudioSalad\Commands;
+namespace Firefly\AudioSalad\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;

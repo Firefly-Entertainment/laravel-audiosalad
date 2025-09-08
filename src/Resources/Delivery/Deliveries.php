@@ -1,11 +1,11 @@
 <?php
 
-namespace StickyBeat\AudioSalad\Resources\Delivery;
+namespace Firefly\AudioSalad\Resources\Delivery;
 
 use Illuminate\Support\Carbon;
-use StickyBeat\AudioSalad\Services\Client;
-use StickyBeat\AudioSalad\Interfaces\ResourceInterface;
-use StickyBeat\AudioSalad\Exceptions\AudioSaladException;
+use Firefly\AudioSalad\Services\Client;
+use Firefly\AudioSalad\Interfaces\ResourceInterface;
+use Firefly\AudioSalad\Exceptions\AudioSaladException;
 
 class Deliveries implements ResourceInterface
 {

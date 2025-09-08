@@ -1,16 +1,16 @@
 <?php
 
-namespace StickyBeat\AudioSalad\Services;
+namespace Firefly\AudioSalad\Services;
 
 use Carbon\Carbon;
-use StickyBeat\AudioSalad\Services\Client;
-use StickyBeat\AudioSalad\Resources\Image\Images;
-use StickyBeat\AudioSalad\Resources\Label\Labels;
-use StickyBeat\AudioSalad\Resources\Track\Tracks;
-use StickyBeat\AudioSalad\Resources\Release\Releases;
-use StickyBeat\AudioSalad\Resources\Delivery\Deliveries;
-use StickyBeat\AudioSalad\Exceptions\AudioSaladException;
-use StickyBeat\AudioSalad\Resources\Ingestion\Ingestions;
+use Firefly\AudioSalad\Services\Client;
+use Firefly\AudioSalad\Resources\Image\Images;
+use Firefly\AudioSalad\Resources\Label\Labels;
+use Firefly\AudioSalad\Resources\Track\Tracks;
+use Firefly\AudioSalad\Resources\Release\Releases;
+use Firefly\AudioSalad\Resources\Delivery\Deliveries;
+use Firefly\AudioSalad\Exceptions\AudioSaladException;
+use Firefly\AudioSalad\Resources\Ingestion\Ingestions;
 
 class AudioSalad
 {

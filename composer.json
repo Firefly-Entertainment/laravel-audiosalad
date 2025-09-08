@@ -1,5 +1,5 @@
 {
-  "name": "stickybeat/laravel-audiosalad",
+  "name": "firefly/laravel-audiosalad",
   "description": "AudioSalad API Client for Laravel",
   "keywords": [
     "laravel",
@@ -16,22 +16,22 @@
   },
   "autoload": {
     "psr-4": {
-      "StickyBeat\\AudioSalad\\": "src/"
+      "Firefly\\AudioSalad\\": "src/"
     }
   },
   "authors": [
     {
       "name": "Örjan Classon",
-      "email": "orjan@stickybeat.se"
+      "email": "orjan@hellofirefly.com"
     }
   ],
   "extra": {
     "laravel": {
       "providers": [
-        "StickyBeat\\AudioSalad\\AudioSaladServiceProvider"
+        "Firefly\\AudioSalad\\AudioSaladServiceProvider"
       ],
       "aliases": {
-        "AudioSalad": "StickyBeat\\AudioSalad\\Facades\\AudioSalad"
+        "AudioSalad": "Firefly\\AudioSalad\\Facades\\AudioSalad"
       }
     }
   }

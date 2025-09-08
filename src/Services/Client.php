@@ -1,6 +1,6 @@
 <?php
 
-namespace StickyBeat\AudioSalad\Services;
+namespace Firefly\AudioSalad\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Redis;
 use Psr\Http\Message\RequestInterface;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
-use StickyBeat\AudioSalad\Interfaces\ClientInterface;
-use StickyBeat\AudioSalad\Exceptions\AudioSaladException;
+use Firefly\AudioSalad\Interfaces\ClientInterface;
+use Firefly\AudioSalad\Exceptions\AudioSaladException;
 
 class Client implements ClientInterface
 {
@@ -200,7 +200,7 @@ class Client implements ClientInterface
    *
    * @param  \Illuminate\Http\Client\Response             $response
    *
-   * @throws \StickyBeat\AudioSalad\Exceptions\AudioSaladException (description)
+   * @throws \Firefly\AudioSalad\Exceptions\AudioSaladException (description)
    *
    * @return void
    */
@@ -270,7 +270,7 @@ class Client implements ClientInterface
   /**
    * Gets the refresh token.
    *
-   * @throws \StickyBeat\AudioSalad\Exceptions\FortnoxException
+   * @throws \Firefly\AudioSalad\Exceptions\FortnoxException
    *
    * @return string
    */
@@ -304,7 +304,7 @@ class Client implements ClientInterface
   /**
    * Refreshes the access and refresh token.
    *
-   * @throws \StickyBeat\AudioSalad\Exceptions\FortnoxException
+   * @throws \Firefly\AudioSalad\Exceptions\FortnoxException
    *
    * @return string
    */

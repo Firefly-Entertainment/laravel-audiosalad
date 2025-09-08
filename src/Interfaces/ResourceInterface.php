@@ -1,8 +1,8 @@
 <?php
 
-namespace StickyBeat\AudioSalad\Interfaces;
+namespace Firefly\AudioSalad\Interfaces;
 
 interface ResourceInterface
 {
-    //
+  //
 }

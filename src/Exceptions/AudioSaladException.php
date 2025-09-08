@@ -1,8 +1,8 @@
 <?php
 
-namespace StickyBeat\AudioSalad\Exceptions;
+namespace Firefly\AudioSalad\Exceptions;
 
 class AudioSaladException extends \Exception
 {
-    //
+  //
 }

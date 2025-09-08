@@ -1,12 +1,12 @@
 <?php
 
-namespace StickyBeat\AudioSalad\Resources\Ingestion;
+namespace Firefly\AudioSalad\Resources\Ingestion;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use StickyBeat\AudioSalad\Services\Client;
-use StickyBeat\AudioSalad\Interfaces\ResourceInterface;
-use StickyBeat\AudioSalad\Exceptions\AudioSaladException;
+use Firefly\AudioSalad\Services\Client;
+use Firefly\AudioSalad\Interfaces\ResourceInterface;
+use Firefly\AudioSalad\Exceptions\AudioSaladException;
 
 class Ingestions implements ResourceInterface
 {
@@ -99,8 +99,8 @@ class Ingestions implements ResourceInterface
     ];
 
     $response = $this->client->get("ingest/status", $data);
-    
-    if( $response->json() == null){
+
+    if ($response->json() == null) {
       Log::info("Empty response from AudioSalad API");
       Log::info($response->status());
       Log::info($response->body());

@@ -1,9 +1,9 @@
 <?php
 
-namespace StickyBeat\AudioSalad\Commands;
+namespace Firefly\AudioSalad\Commands;
 
 use Illuminate\Console\Command;
-use StickyBeat\AudioSalad\Services\Client;
+use Firefly\AudioSalad\Services\Client;
 
 class RefreshTokensCommand extends Command
 {
