@@ -2,7 +2,7 @@
   "name": "laravel-audiosalad",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:StickyBeat/laravel-audiosalad.git",
+  "repository": "git@github.com:Firefly-Entertainment/laravel-audiosalad.git",
   "author": "Örjan Classon <orjan@stickybeat.se>",
   "license": "MIT",
   "devDependencies": {
